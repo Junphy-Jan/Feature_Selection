@@ -1,5 +1,4 @@
 """过滤式特征选择"""
-# Authors: 21080443
 from typing import List, Union
 import numpy as np
 import ray
@@ -352,17 +351,22 @@ def select_feature(data: Union[str, List[str]], label_col_name: str, *, objectiv
         for feature in method_selected:
             feature_score[feature] = feature_score.get(feature, 0) + 1
     sorted_feature_score = sorted(feature_score.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+    
+    selected_features = []
     if len(sorted_feature_score) >= select_n:
         for i in range(select_n):
             print("特征序号：{}，即特征：{}，得分：{}".format(sorted_feature_score[i][0], schemas[sorted_feature_score[i][0]],
                                                 sorted_feature_score[i][1]))
-        return sorted_feature_score[:select_n]
+            selected_features.append(schemas[sorted_feature_score[i][0]])
+        return sorted_feature_score[:select_n], selected_features
     else:
-        return sorted_feature_score
+        return sorted_feature_score, schemas
 
 
 if __name__ == '__main__':
     ray.shutdown()
-    feature_score_ = select_feature("../data/cs-training-no-index-no-str.csv",
+    start = time.time()
+    feature_score_， selected_features = select_feature("../data/cs-training-no-index-no-str.csv",
                                     label_col_name="SeriousDlqin2yrs", methods=["all"])
-    print("feature_score{}".format(feature_score_))
+    print("feature_score:\n{}, \n selected features: \n{}".format(feature_score_, selected_features))
+    print("cost:{}".format(time.time() - start))
