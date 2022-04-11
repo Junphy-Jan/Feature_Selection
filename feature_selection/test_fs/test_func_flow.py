@@ -7,21 +7,21 @@ best_5_feature = None
 
 @WrapTestFunc(purpose="测试默认参数特征选择，默认选择过滤式方法")
 def test_filter_methods():
-    feature_score = select_feature("../data/cs-training-no-index-no-str.csv",
+    feature_score, selected_features = select_feature("../data/cs-training-no-index-no-str.csv",
                                    label_col_name="SeriousDlqin2yrs", cluster_address=None)
     print("feature_score:{}".format(feature_score))
 
 
 @WrapTestFunc(purpose="测试全部特征选择方法")
 def test_all_methods():
-    feature_score = select_feature("../data/cs-training-no-index-no-str.csv", methods=["all"],
+    feature_score, selected_features = select_feature("../data/cs-training-no-index-no-str.csv", methods=["all"],
                                    label_col_name="SeriousDlqin2yrs", cluster_address=None)
     print("feature_score:{}".format(feature_score))
 
 
 @WrapTestFunc(purpose="测试选择指定的特征选择方法")
 def test_special_methods():
-    feature_score = select_feature("../data/cs-training-no-index-no-str.csv", methods=[SupportMethods.STEP_WISE.name],
+    feature_score, selected_features = select_feature("../data/cs-training-no-index-no-str.csv", methods=[SupportMethods.STEP_WISE.name],
                                    label_col_name="SeriousDlqin2yrs", cluster_address=None)
     print("feature_score:{}".format(feature_score))
     global best_5_feature
